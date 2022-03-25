@@ -4,6 +4,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { AnimationMixer } from 'three';
 
+
 // Setup
 
 const scene = new THREE.Scene();
@@ -20,17 +21,26 @@ camera.position.setZ(30);
 camera.position.setX(-3);
 
 renderer.render(scene, camera);
- 
 
 const loader = new GLTFLoader()
-const mixer = new THREE.AnimationMixer()
+let mixer = new THREE.AnimationMixer()
+let modelReady = false
+const clock = new THREE.Clock()
+
 loader.load(
-  '/models/Parrot.glb',
+  '/models/bulldog.glb',
     function (gltf) {
-      gltf.scene.scale.set(0.1,0.1,0.1)
-      gltf.scene.position.set(5,4,-20);
-     
+
+      gltf.scene.scale.set(15, 15, 15)
+      gltf.scene.position.set(15,-15,-25);
+      gltf.scene.rotation.y = -0.8;
+          
+      mixer = new THREE.AnimationMixer(gltf.scene)
+      mixer.clipAction(gltf.animations[0]).play();
+ 
       scene.add(gltf.scene)
+      
+      modelReady=true
     },
     (xhr) => {
         console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
@@ -39,6 +49,8 @@ loader.load(
         console.log(error)
     }
 )
+
+
 
 
 // Torus
@@ -145,7 +157,7 @@ function animate() {
   //torus.rotation.z += 0.01;
 
   moon.rotation.x += 0.005;
-
+  if (modelReady) mixer.update(clock.getDelta())
   // controls.update();
 
   renderer.render(scene, camera);
