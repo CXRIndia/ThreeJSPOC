@@ -2,6 +2,7 @@ import './style.css';
 import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
+import { AnimationMixer } from 'three';
 
 // Setup
 
@@ -20,7 +21,26 @@ camera.position.setX(-3);
 
 renderer.render(scene, camera);
      
- 
+
+const loader = new GLTFLoader()
+const mixer = new THREE.AnimationMixer()
+loader.load(
+  '/models/Parrot.glb',
+    function (gltf) {
+      gltf.scene.scale.set(0.2,0.2,0.2)
+      gltf.scene.position.set(-15,10, 30);
+            
+      scene.add(gltf.scene)
+    },
+    (xhr) => {
+        console.log((xhr.loaded / xhr.total) * 100 + '% loaded')
+    },
+    (error) => {
+        console.log(error)
+    }
+)
+
+
 // Torus
 
 const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
