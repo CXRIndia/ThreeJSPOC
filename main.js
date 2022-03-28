@@ -33,7 +33,7 @@ loader.load(
     function (gltf) {
 
       gltf.scene.scale.set(65,65,65)
-      gltf.scene.position.set(25,-15,-15);
+      gltf.scene.position.set(25,-20,-20);
       gltf.scene.rotation.y = -0.5;
           
       mixer = new THREE.AnimationMixer(gltf.scene)
