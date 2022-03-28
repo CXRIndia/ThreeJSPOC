@@ -3,6 +3,7 @@ import * as THREE from 'three';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { AnimationMixer } from 'three';
+import { Vector3 } from 'three';
 
 
 // Setup
@@ -26,18 +27,18 @@ const loader = new GLTFLoader()
 let mixer = new THREE.AnimationMixer()
 let modelReady = false
 const clock = new THREE.Clock()
-
+let bulldog= null
 loader.load(
-  '/models/bulldog.glb',
+  '/models/bulldognew.glb',
     function (gltf) {
 
-      gltf.scene.scale.set(15, 15, 15)
-      gltf.scene.position.set(15,-15,-25);
-      gltf.scene.rotation.y = -0.8;
+      gltf.scene.scale.set(65,65,65)
+      gltf.scene.position.set(25,-15,-15);
+      gltf.scene.rotation.y = -0.5;
           
       mixer = new THREE.AnimationMixer(gltf.scene)
       mixer.clipAction(gltf.animations[0]).play();
- 
+      bulldog=gltf.scene;
       scene.add(gltf.scene)
       
       modelReady=true
@@ -50,16 +51,6 @@ loader.load(
     }
 )
 
-
-
-
-// Torus
-
-//const geometry = new THREE.TorusGeometry(10, 3, 16, 100);
-//const material = new THREE.MeshStandardMaterial({ color: 0xff6347 });
-//const torus = new THREE.Mesh(geometry, material);
-
-//scene.add(torus);
 
 // Lights
 
@@ -77,35 +68,11 @@ scene.add(pointLight, ambientLight);
 
 // const controls = new OrbitControls(camera, renderer.domElement);
 
-function addStar() {
-  const geometry = new THREE.SphereGeometry(0.25, 24, 24);
-  const material = new THREE.MeshStandardMaterial({ color: 0xffffff });
-  const star = new THREE.Mesh(geometry, material);
-
-  const [x, y, z] = Array(3)
-    .fill()
-    .map(() => THREE.MathUtils.randFloatSpread(100));
-
-  star.position.set(x, y, z);
-  scene.add(star);
-}
-
-Array(200).fill().forEach(addStar);
 
 // Background
 
 const spaceTexture = new THREE.TextureLoader().load('/images/Court.jpg');
 scene.background = spaceTexture;
-
-// Avatar
-
-//const jeffTexture = new THREE.TextureLoader().load('/images/beachPhoto.jpg');
-
-//const jeff = new THREE.Mesh(new THREE.BoxGeometry(3, 3, 3), new THREE.MeshBasicMaterial({ map: jeffTexture }));
-
-//scene.add(jeff);
-
-// Moon
 
 const moonTexture = new THREE.TextureLoader().load('/images/moon.jpg');
 const normalTexture = new THREE.TextureLoader().load('/images/normal.jpg');
@@ -124,23 +91,55 @@ moon.position.z = 10;
 moon.position.y = 40;
 moon.position.setX(-100);
 
-//jeff.position.z = -5;
-//jeff.position.x = 2;
+const data = {
+  lerpAlpha: 10,
+  lerpVectorsAlpha: 1.0,
+}
 
+function playScrollAnimations() {
+  console.log(scrollPercent)  
+  scrollPercent =((document.documentElement.scrollTop || document.body.scrollTop) /
+          ((document.documentElement.scrollHeight ||
+              document.body.scrollHeight) -
+              document.documentElement.clientHeight)) *
+      100
+  ;
+
+  if (modelReady)
+  {   
+    if(scrollPercent<10)
+    {
+      bulldog.scale.set(65,65,65)
+      bulldog.position.set(25,-20,-20);
+      bulldog.rotation.y = -0.5;  
+      bulldog.rotation.x = 0;
+      bulldog.rotation.z = 0;  
+    }
+    else if(scrollPercent>90)
+    {             
+        bulldog.scale.lerp(new Vector3(65,65,65),scrollPercent*0.001)
+        bulldog.rotation.y = -0.5;   
+        bulldog.rotation.x = 0;
+        bulldog.rotation.z = 0;     
+    }
+    else 
+    {            
+      bulldog.scale.lerp(new Vector3(55,55,55),scrollPercent*0.0005)
+      bulldog.position.lerp(new Vector3(30,-20,-15),scrollPercent*0.0005);
+      bulldog.rotation.x = -scrollPercent*0.005;     
+      bulldog.rotation.y = scrollPercent*0.06
+    }
+  }
+
+}
 // Scroll Animation
+let scrollPercent = 0
 
 function moveCamera() {
   const t = document.body.getBoundingClientRect().top;
   moon.rotation.x += 0.05;
   moon.rotation.y += 0.075;
   moon.rotation.z += 0.05;
-
-  //jeff.rotation.y += 0.01;
-  //jeff.rotation.z += 0.01;
-
-  camera.position.z = t * -0.01;
-  camera.position.x = t * -0.0002;
-  camera.rotation.y = t * -0.0002;
   
 }
 
@@ -152,10 +151,7 @@ moveCamera();
 function animate() {
   requestAnimationFrame(animate);
 
-  //torus.rotation.x += 0.01;
-  //torus.rotation.y += 0.005;
-  //torus.rotation.z += 0.01;
-
+  playScrollAnimations()
   moon.rotation.x += 0.005;
   if (modelReady) mixer.update(clock.getDelta())
   // controls.update();
