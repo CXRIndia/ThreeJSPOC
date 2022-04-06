@@ -115,18 +115,19 @@ function playScrollAnimations() {
       bulldog.rotation.x = 0;
       bulldog.rotation.z = 0;  
     }
-    else if(scrollPercent>90)
-    {             
-        bulldog.scale.lerp(new Vector3(65,65,65),scrollPercent*0.001)
-        bulldog.rotation.y = -0.5;   
-        bulldog.rotation.x = 0;
-        bulldog.rotation.z = 0;     
-    }
+    //else if(scrollPercent>90)
+   // {             
+        //bulldog.scale.lerp(new Vector3(65,65,65),scrollPercent*0.001)
+       // bulldog.rotation.y = -0.5;   
+       // bulldog.rotation.x = 0;
+       // bulldog.rotation.z = 0;     
+   // }
     else 
     {            
       bulldog.scale.lerp(new Vector3(55,55,55),scrollPercent*0.0005)
-      bulldog.position.lerp(new Vector3(30,-20,-15),scrollPercent*0.0005);
+      bulldog.position.lerp(new Vector3(32,-20,-15),scrollPercent*0.0005);
       bulldog.rotation.x = -scrollPercent*0.005;     
+      //bulldog.rotation.y = scrollPercent*0.06
       bulldog.rotation.y = scrollPercent*0.06
     }
   }
