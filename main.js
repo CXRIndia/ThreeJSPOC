@@ -29,11 +29,11 @@ let modelReady = false
 const clock = new THREE.Clock()
 let bulldog= null
 loader.load(
-  '/models/bulldognew.glb',
+  '/models/bulldog_mascot.glb',
     function (gltf) {
 
-      gltf.scene.scale.set(65,65,65)
-      gltf.scene.position.set(25,-20,-20);
+      gltf.scene.scale.set(55,55,55)
+      gltf.scene.position.set(25,-23,-20);
       gltf.scene.rotation.y = -0.5;
           
       mixer = new THREE.AnimationMixer(gltf.scene)
@@ -109,8 +109,8 @@ function playScrollAnimations() {
   {   
     if(scrollPercent<10)
     {
-      bulldog.scale.set(65,65,65)
-      bulldog.position.set(25,-20,-20);
+      bulldog.scale.set(55,55,55)
+      bulldog.position.set(25,-23,-20);
       bulldog.rotation.y = -0.5;  
       bulldog.rotation.x = 0;
       bulldog.rotation.z = 0;  
